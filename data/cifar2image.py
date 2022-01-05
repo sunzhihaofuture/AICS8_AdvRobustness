@@ -4,7 +4,7 @@ import random, cv2, os
 
 if __name__ == "__main__":
     for part in ['train', 'test']:
-        save_path = f"/home/linyan/project/Tianchi/AICS8_AdvRobustness/data/images/{part}"
+        save_path = f"/home/linyan/project/Tianchi/AICS8_AdvRobustness/data/images/{part}"  # images
         dataset = torchvision.datasets.CIFAR10(root='data/', train=False if part == 'test' else True, download=False)
         images = []
         labels = []

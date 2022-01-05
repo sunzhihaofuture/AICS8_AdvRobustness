@@ -21,7 +21,7 @@ from utils import load_model, AverageMeter, accuracy
 
 # Use CUDA
 use_cuda = torch.cuda.is_available()
-device = torch.device('cuda:3')
+device = torch.device('cuda:3')   # 用于选择cuda
 
 seed = 42
 random.seed(seed)
@@ -29,8 +29,8 @@ np.random.seed(seed)
 torch.manual_seed(seed)
 torch.backends.cudnn.deterministic = True
 
-code_experiment = 'cifar_test_attack_try_10000'
-code_dataset = 'cifar10_attack_try'
+code_experiment = 'cifar_test_attack_try_10000'   # 实验名称
+code_dataset = 'cifar10_attack_try'   # 保存名字
 
 class MyDataset(torch.utils.data.Dataset):
     def __init__(self, transform):
