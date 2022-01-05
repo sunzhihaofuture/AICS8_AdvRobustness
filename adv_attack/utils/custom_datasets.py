@@ -6,7 +6,7 @@ from torch.utils.data import Dataset, DataLoader
 
 
 class Dataset_Cifar10(Dataset):
-    def __init__(self, labelfile_path, image_rootpath, transform=None):
+    def __init__(self, labelfile_path, transform=None):
         self.image_path_list, self.image_label_list = [], []
         self.image_list = []
         self.transform = transform
@@ -15,12 +15,9 @@ class Dataset_Cifar10(Dataset):
         for line in labelfile:
             line = line[:-1]
             infos = line.split(' ')
-            image_name = infos[0]
+            image_path = infos[0]
             image_label = infos[1]
                 
-            folder = os.path.join(image_rootpath, image_label)
-            image_path = os.path.join(folder, image_name)
-
             # image_path = image_name
 
             if os.path.exists(image_path):

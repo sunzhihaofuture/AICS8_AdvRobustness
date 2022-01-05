@@ -20,15 +20,13 @@ from utils.save_image import ImageSave
 
 def main():
     # ---------- Set the Configuration ----------
-    device = torch.device("cuda:0")
-    arch = 'resnet50'
-    code_experiment = ''
-    code_save = ''
-    code_attack_method = 'pgd'
+    device = torch.device("cuda:3")
+    arch = 'densenet121'
+    code_experiment = 'cifar_test_10000'
+    code_attack_method = 'mifgsm'
 
-    labelfile_path = ''
-    image_rootpath = ''
-    save_rootpath = ''
+    labelfile_path = 'data/cifar10_test.txt'
+    save_rootpath = f'data/attack_{code_attack_method}_{arch}'
 
     if not os.path.exists(save_rootpath):
         os.makedirs(save_rootpath)
@@ -38,13 +36,13 @@ def main():
 
     if arch == 'resnet50':
         model = ResNet50()
-        pth_file = 'path/resnet50-{}.pth.tar'.format(code_experiment)
+        pth_file = 'output/resnet50-{}.pth.tar'.format(code_experiment)
     elif arch == 'densenet121':
         model = DenseNet121()
-        pth_file = 'path/densenet121-{}.pth.tar'.format(code_experiment)
+        pth_file = 'output/densenet121-{}.pth.tar'.format(code_experiment)
     elif arch == 'wideresnet':
         model = wideresnet()
-        pth_file = 'path/wideresnet-{}.pth.tar'.format(code_experiment)
+        pth_file = 'output/wideresnet-{}.pth.tar'.format(code_experiment)
 
     net = torch.load(pth_file, map_location=device)['state_dict']
     model.load_state_dict({k.replace('module.',''):v for k, v in net.items()})
@@ -52,12 +50,13 @@ def main():
 
     # ---------- Load Dataset ----------
     print('Loading Dataset [{}]...'.format(labelfile_path))
-    dataset = Dataset_Cifar10(labelfile_path=labelfile_path, image_rootpath=image_rootpath)
+    dataset = Dataset_Cifar10(labelfile_path=labelfile_path)
     dataloader = DataLoader(dataset=dataset, batch_size=32, shuffle=False)
 
     # ---------- Attack and Save ----------
     print("Attacking with {}...".format(code_attack_method))
     save_data = None
+    idx = 0
     for data, target in tqdm(dataloader):
         data, target = data.float().to(device), target.long().to(device)
         
@@ -75,9 +74,24 @@ def main():
             save_data = np.concatenate(
                 (save_data, perturbed_data.detach_().cpu().numpy()), axis=0)
 
-        saver = ImageSave()
-        saver.save_images(save_data, labelfile_path, save_rootpath)
-
-
+    saver = ImageSave()
+    print(f"len of the dataset: {len(save_data)}")
+    saver.save_images(save_data, save_rootpath)
+    
+    labelfile = open(labelfile_path, 'r')
+    label_list = []
+    for idx, line in enumerate(labelfile):
+        infos = line.strip().split(' ')
+        image_label = infos[1]
+        
+        name = '0'*(7-len(str(idx))) + str(idx) + '.jpg'
+        image_path = f'{save_rootpath}/images/{name}'
+        label_list.append(f'{image_path} {image_label}')
+    
+    f = open(f'{save_rootpath}/attack.txt', 'w')
+    for idx, content in enumerate(label_list):
+        f.write(content)
+        f.write('\n')
+    
 if __name__ == '__main__':
     main()

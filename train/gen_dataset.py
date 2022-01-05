@@ -4,12 +4,12 @@ from PIL import Image
 import torchvision
 import random
 
-labelfile_path = ''
+labelfile_path = 'data/aug_noise/attack.txt'
 
 image_path_list = []
 image_label_list = []
 
-code_dataset = 'FD2'
+code_dataset = 'cifar10_noise_attack'
 
 with open(labelfile_path, 'r') as labelfile:
     for line in labelfile:

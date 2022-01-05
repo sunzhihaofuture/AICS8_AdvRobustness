@@ -1,5 +1,5 @@
 import numpy as np
-import os
+import os, cv2
 from PIL import Image
 
 class ImageSave():
@@ -20,21 +20,9 @@ class ImageSave():
         image.save(save_path)
         print('{} has been saved into {}.'.format(image_name, save_folder))
     
-    def save_images(self, image_list_np, labelfile_path, image_rootpath):
-        image_path_list = []
-        
-        labelfile = open(labelfile_path, 'r')
-        for line in labelfile:
-            line = line[:-1]
-            infos = line.split(' ')
-            image_name = infos[0]
-            image_label = infos[1]
-                
-            folder = '{}/{}'.format(image_rootpath, image_label)
-            image_path = '{}/{}'.format(folder, image_name)
-            image_path_list.append(image_path)
-
-        # assert image_list_np.shape[0] == len(image_path_list)
+    def save_images(self, image_list_np, image_rootpath):
 
         for index in range(image_list_np.shape[0]):
-            self.save_image(image_list_np[index], image_path_list[index])
+            name = '0'*(7-len(str(index))) + str(index) + '.jpg'
+            image_path = f'{image_rootpath}/images/{name}'
+            self.save_image(image_list_np[index], image_path)

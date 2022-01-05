@@ -15,22 +15,22 @@ import torchvision.transforms as transforms
 import torchvision.datasets as datasets
 from PIL import Image
 
-from config.config import args_resnet, args_densenet, args_wideresnet
+from config.new_config import args_resnet, args_densenet, args_wideresnet
 
 from utils import load_model, AverageMeter, accuracy
 
 # Use CUDA
 use_cuda = torch.cuda.is_available()
-device = torch.device('cuda:0')
+device = torch.device('cuda:3')
 
-seed = 11037
+seed = 42
 random.seed(seed)
 np.random.seed(seed)
 torch.manual_seed(seed)
 torch.backends.cudnn.deterministic = True
 
-code_experiment = ''
-code_dataset = ''
+code_experiment = 'cifar_test_attack_try_10000'
+code_dataset = 'cifar10_attack_try'
 
 class MyDataset(torch.utils.data.Dataset):
     def __init__(self, transform):
@@ -135,7 +135,7 @@ def train(trainloader, model, optimizer, device):
     return losses.avg, accs.avg
 
 def save_checkpoint(state, arch):
-    filepath = os.path.join('network/{}-{}.pth.tar'.format(arch, code_experiment))
+    filepath = os.path.join('output/{}-{}.pth.tar'.format(arch, code_experiment))
     torch.save(state, filepath)
 
 if __name__ == '__main__':
