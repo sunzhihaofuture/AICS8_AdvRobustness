@@ -15,5 +15,7 @@ python train/train.py
 
 ## 生成攻击图片
 修改 adv_attack/attack_main.py 文件中的 arch(resnet50, densenet121), code_experiment(自己随便取), code_attack_method(分别为cw，pgd，mifgsm), labelfile_path(攻击文件存放的地址), save_rootpath(生成的图片与标签存放的地址)
-python adv_attack/attack_main.py
 
+```s
+python adv_attack/attack_main.py
+```
