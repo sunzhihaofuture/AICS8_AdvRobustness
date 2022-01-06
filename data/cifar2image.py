@@ -1,11 +1,13 @@
 import numpy as np
 import torchvision
-import random, cv2, os
+import random
+import cv2
+import os
 
 if __name__ == "__main__":
     for part in ['train', 'test']:
-        save_path = f"/home/linyan/project/Tianchi/AICS8_AdvRobustness/data/images/{part}"  # images
-        dataset = torchvision.datasets.CIFAR10(root='data/', train=False if part == 'test' else True, download=False)
+        save_path = f"/home/chx/AICS8_AdvRobustness/data/images/{part}"  # images
+        dataset = torchvision.datasets.CIFAR10(root='data/', train=False if part == 'test' else True, download=False)  # download
         images = []
         labels = []
         for image, label in dataset:

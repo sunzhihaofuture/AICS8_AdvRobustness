@@ -4,12 +4,12 @@ from PIL import Image
 import torchvision
 import random
 
-labelfile_path = 'data/aug_noise/attack.txt'
+labelfile_path = 'data/cifar10_test.txt'  # data/aug_noise/attack.txt， data/cifar10_test.txt 上一步的label路径
 
 image_path_list = []
 image_label_list = []
 
-code_dataset = 'cifar10_noise_attack'
+code_dataset = 'cifar10_raw_test'  # cifar10_noise_attack 保存npy的名字（部分data，label）cifar10_raw_test，
 
 with open(labelfile_path, 'r') as labelfile:
     for line in labelfile:
@@ -17,7 +17,7 @@ with open(labelfile_path, 'r') as labelfile:
         infos = line.split(' ')
         image_name = infos[0]
         image_label = infos[1]
-        
+
         image_path = image_name
 
         if os.path.exists(image_path):
@@ -36,7 +36,7 @@ for i in range(len(image_path_list)):
     image = np.asarray(image)
     images.append(image)
     soft_label = np.zeros(10)
-    soft_label[image_label] += random.uniform(0, 10) # an unnormalized soft label vector
+    soft_label[image_label] += random.uniform(0, 10)  # an unnormalized soft label vector
     soft_labels.append(soft_label)
 images = np.array(images)
 soft_labels = np.array(soft_labels)
