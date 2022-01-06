@@ -57,22 +57,23 @@ def main():
     print("Attacking with {}...".format(code_attack_method))
     save_data = None
     idx = 0
-    for data, target in tqdm(dataloader):
-        data, target = data.float().to(device), target.long().to(device)
-        
-        if code_attack_method == 'cw':
-            perturbed_data = cw_l2_attack(model=model, images=data, labels=target, device=device)
-        elif code_attack_method == 'pgd':
-            perturbed_data = pgd_attack(model=model, images=data, labels=target, eps=0.3)
-        elif code_attack_method == 'mifgsm':
-            attack_mifgsm = MIFGSM(model, eps=8/255, alpha=2/255, steps=100, decay=0.1)
-            perturbed_data = attack_mifgsm(data, target)
-        
-        if save_data is None:
-            save_data = perturbed_data.detach_().cpu().numpy()
-        else:
-            save_data = np.concatenate(
-                (save_data, perturbed_data.detach_().cpu().numpy()), axis=0)
+    for i in range(3):
+        for data, target in tqdm(dataloader):
+            data, target = data.float().to(device), target.long().to(device)
+            
+            if code_attack_method == 'cw':
+                perturbed_data = cw_l2_attack(model=model, images=data, labels=target, device=device)
+            elif code_attack_method == 'pgd':
+                perturbed_data = pgd_attack(model=model, images=data, labels=target, eps=0.3)
+            elif code_attack_method == 'mifgsm':
+                attack_mifgsm = MIFGSM(model, eps=8/255, alpha=2/255, steps=100, decay=0.1)
+                perturbed_data = attack_mifgsm(data, target)
+            
+            if save_data is None:
+                save_data = perturbed_data.detach_().cpu().numpy()
+            else:
+                save_data = np.concatenate(
+                    (save_data, perturbed_data.detach_().cpu().numpy()), axis=0)
 
     saver = ImageSave()
     print(f"len of the dataset: {len(save_data)}")
@@ -80,13 +81,16 @@ def main():
     
     labelfile = open(labelfile_path, 'r')
     label_list = []
-    for idx, line in enumerate(labelfile):
-        infos = line.strip().split(' ')
-        image_label = infos[1]
-        
-        name = '0'*(7-len(str(idx))) + str(idx) + '.jpg'
-        image_path = f'{save_rootpath}/images/{name}'
-        label_list.append(f'{image_path} {image_label}')
+    for i in range(3):
+        length = len(label_list)
+        for idx, line in enumerate(labelfile):
+            idx = length + idx
+            infos = line.strip().split(' ')
+            image_label = infos[1]
+            
+            name = '0'*(7-len(str(idx))) + str(idx) + '.jpg'
+            image_path = f'{save_rootpath}/images/{name}'
+            label_list.append(f'{image_path} {image_label}')
     
     f = open(f'{save_rootpath}/attack.txt', 'w')
     for idx, content in enumerate(label_list):
