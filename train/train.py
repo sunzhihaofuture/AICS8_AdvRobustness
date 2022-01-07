@@ -29,8 +29,8 @@ np.random.seed(seed)
 torch.manual_seed(seed)
 torch.backends.cudnn.deterministic = True
 
-code_experiment = 'cifar_test_attack_try_10000'   # 实验名称
-code_dataset = 'cifar10_attack_try'   # 保存名字
+code_experiment = 'cifar_test_attack_aug_10000'   # 实验名称
+code_dataset = 'cifar10_attack_aug'   # 保存名字
 
 class MyDataset(torch.utils.data.Dataset):
     def __init__(self, transform):

@@ -92,7 +92,7 @@ def main():
             image_path = f'{save_rootpath}/images/{name}'
             label_list.append(f'{image_path} {image_label}')
     
-    f = open(f'{save_rootpath}/attack.txt', 'w')
+    f = open(f'{save_rootpath}/attack.txt', 'a+')
     for idx, content in enumerate(label_list):
         f.write(content)
         f.write('\n')

@@ -13,7 +13,7 @@ args_resnet = {
         'T_mult':2,
         'eta_min':1e-6,
     },
-    'batch_size': 128,
+    'batch_size': 32,
 }
 args_densenet = {
     'epochs': 185,
@@ -29,7 +29,7 @@ args_densenet = {
         'T_mult':2,
         'eta_min':1e-6,
     },
-    'batch_size': 128,
+    'batch_size': 32,
 }
 
 args_wideresnet = {
