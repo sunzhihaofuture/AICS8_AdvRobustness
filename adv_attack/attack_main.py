@@ -16,17 +16,27 @@ from model.wideresnet import wideresnet
 
 from utils.custom_datasets import Dataset_Cifar10
 from utils.save_image import ImageSave
+import random
+
+def set_seed(seed=0):
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
 
 
 def main():
     # ---------- Set the Configuration ----------
     device = torch.device("cuda:3")
-    arch = 'densenet121'
+    arch = 'resnet50'
     code_experiment = 'cifar_test_10000'
-    code_attack_method = 'mifgsm'
+    code_attack_method = 'pgd'
 
     labelfile_path = 'data/cifar10_test.txt'
-    save_rootpath = f'data/attack_{code_attack_method}_{arch}'
+    save_rootpath = f'data/attack_{code_attack_method}_{arch}_30000'
 
     if not os.path.exists(save_rootpath):
         os.makedirs(save_rootpath)
@@ -58,6 +68,7 @@ def main():
     save_data = None
     idx = 0
     for i in range(3):
+        set_seed(i*10)
         for data, target in tqdm(dataloader):
             data, target = data.float().to(device), target.long().to(device)
             
@@ -83,19 +94,21 @@ def main():
     label_list = []
     for i in range(3):
         length = len(label_list)
-        for idx, line in enumerate(labelfile):
-            idx = length + idx
+        for j, line in enumerate(labelfile):
+            idx = length + j
             infos = line.strip().split(' ')
             image_label = infos[1]
             
             name = '0'*(7-len(str(idx))) + str(idx) + '.jpg'
             image_path = f'{save_rootpath}/images/{name}'
             label_list.append(f'{image_path} {image_label}')
+        labelfile.close()
     
     f = open(f'{save_rootpath}/attack.txt', 'a+')
     for idx, content in enumerate(label_list):
         f.write(content)
         f.write('\n')
+    f.close()
     
 if __name__ == '__main__':
     main()

@@ -65,12 +65,12 @@ soft_labels = []
 transform=get_train_transforms()
 cnt=-1
 
-labelfile_path = 'data/attack/cifar10_attack_aug.txt'
+labelfile_path = 'data/attack/cifar10_attack.txt'
 
 image_path_list = []
 image_label_list = []
 
-code_dataset = 'cifar10_attack_aug'
+code_dataset = 'cifar10_attack'
 
 with open(labelfile_path, 'r') as labelfile:
     for line in labelfile:
@@ -113,7 +113,7 @@ for image, label in tqdm(dataset):
     #cnt+=1
     #if cnt<10000:
     #数据增强
-    for _ in range(1):
+    for _ in range(0):
         img=transform(image=image)['image']
         images.append(img)
         soft_labels.append(soft_label)
