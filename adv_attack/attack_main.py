@@ -31,7 +31,7 @@ def set_seed(seed=0):
 def main():
     # ---------- Set the Configuration ----------
     device = torch.device("cuda:3")
-    arch = 'resnet50'
+    arch = 'densenet121'
     code_experiment = 'cifar_test_10000'
     code_attack_method = 'pgd'
 
@@ -90,9 +90,10 @@ def main():
     print(f"len of the dataset: {len(save_data)}")
     saver.save_images(save_data, save_rootpath)
     
-    labelfile = open(labelfile_path, 'r')
+    
     label_list = []
     for i in range(3):
+        labelfile = open(labelfile_path, 'r')
         length = len(label_list)
         for j, line in enumerate(labelfile):
             idx = length + j
